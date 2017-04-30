@@ -18,15 +18,29 @@ app.post('/waters', (req, res) => {
     src: req.body.src,
     pay: req.body.pay,
     tow: req.body.tow,
-    status: req.body.status
+    status: req.body.status,
+    desc: req.body.desc
   });
 
   water.save().then((doc) => {
     res.send(doc);
+    console.log(water);
   }, (e) => {
     res.status(400).send(e);
   });
 })
+
+var waterPop = new Water({
+    country: "Liberia",
+    lat: 6.61687,
+    lon: -8.82003,
+    src: "Borehole",
+    pay: false,
+    tow: "Hand Pumps",
+    status: "Pump handles are weak",
+    desc: "This is a good water to drink"
+  });
+
 
 app.get('/waters', (req, res) => {
   Water.find().then((waters) => {
