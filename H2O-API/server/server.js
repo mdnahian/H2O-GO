@@ -1,10 +1,12 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var {ObjectID} = require('mongodb');
 
 var {mongoose} = require("./db/mongoose");
 var {Water} = require("./models/water");
 
 var app = express();
+const port = process.env.PORT || 3000
 
 app.use(bodyParser.json());
 
@@ -34,6 +36,34 @@ app.get('/waters', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("Started on port 3000!");
+// GET Waters
+app.get('/waters/:id', (req, res) => {
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  Water.findById(id).then((water) => {
+    if(!water) {
+      return res.status(404).send();
+    }
+
+    res.send({water});
+  }).catch((e) => {
+    res.status(400).send();
+  });
+
 });
+
+app.listen(3000, () => {
+  console.log("Started on port: " + port);
+});
+
+
+
+
+
+
+
+
